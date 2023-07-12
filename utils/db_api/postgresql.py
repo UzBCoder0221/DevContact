@@ -20,13 +20,13 @@ class Database:
         )
 
     async def execute(
-        self,
-        command,
-        *args,
-        fetch: bool = False,
-        fetchval: bool = False,
-        fetchrow: bool = False,
-        execute: bool = False,
+            self,
+            command,
+            *args,
+            fetch: bool = False,
+            fetchval: bool = False,
+            fetchrow: bool = False,
+            execute: bool = False,
     ):
         async with self.pool.acquire() as connection:
             connection: Connection
@@ -47,7 +47,8 @@ class Database:
         id SERIAL PRIMARY KEY,
         full_name VARCHAR(255) NOT NULL,
         username varchar(255) NULL,
-        telegram_id BIGINT NOT NULL UNIQUE
+        telegram_id BIGINT NOT NULL UNIQUE,
+        isBanned boolean NOT NULL DEFAULT false
         );
         """
         await self.execute(sql, execute=True)
@@ -75,6 +76,10 @@ class Database:
     async def count_users(self):
         sql = "SELECT COUNT(*) FROM Users"
         return await self.execute(sql, fetchval=True)
+
+    async def isBanned(self, telegram_id):
+        sql = "SELECT isBanned FROM Users WHERE telegram_id=$1"
+        return await self.execute(sql, telegram_id, fetchval=True)
 
     async def update_user_username(self, username, telegram_id):
         sql = "UPDATE Users SET username=$1 WHERE telegram_id=$2"
