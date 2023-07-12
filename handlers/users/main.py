@@ -41,7 +41,8 @@ async def send_message(message: types.Message):
         await message.answer(answer, reply_markup=ok)
         await MainState.next()
     elif msg == "ℹ️ Bot haqida":
-        answer = f"Bot nomi: {bot.get_me()}\n" \
+        bot_name = await bot.get_me()
+        answer = f"Bot nomi: {bot_name['first_name']}\n" \
                  f"Bot ishga tushurilgan sana: {datetime.today()}\n" \
                  f"Bot yaratuvchisi (egasi): UzBCoder\n" \
                  f"Yaratilgan tili: 🐍Python"
